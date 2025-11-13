@@ -47,6 +47,7 @@ namespace Villa.Controllers
                 Amenity = villaDTO.Amenity,
                 ImageUrl=villaDTO.ImageUrl
             };
+            _logger.Log("added the models vills----", "");
             _context.Add(model);
             _context.SaveChanges();
             return Ok(model);
