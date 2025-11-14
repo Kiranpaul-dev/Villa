@@ -1,9 +1,11 @@
 
 using System;
 using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Villa.Config;
 using Villa.Data;
 using Villa.Logging;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Villa.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Host.UseSerilog();
 
 builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddEndpointsApiExplorer();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -25,6 +28,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
+builder.Services.AddScoped<ITestConnectionService, TestConnectionService>();
+
+builder.Services.Configure<DatabaseSettings>(
+    builder.Configuration.GetSection("DatabaseSettings"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
